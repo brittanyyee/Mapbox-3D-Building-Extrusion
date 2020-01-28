@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Fly to a location based on scroll position</title>
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <style>
+      #map {
+    position: fixed;
+    width: 50%;
+    }
+    #features {
+    width: 50%;
+    margin-left: 50%;
+    font-family: sans-serif;
+    overflow-y: scroll;
+    background-color: #fafafa;
+    }
+    section {
+    padding: 25px 50px;
+    line-height: 25px;
+    border-bottom: 1px solid #ddd;
+    opacity: 0.25;
+    font-size: 13px;
+    }
+    section.active {
+    opacity: 1;
+    }
+    section:last-child {
+    border-bottom: none;
+    margin-bottom: 200px;
+    }
+    </style>
+    <div id="map"></div>
+    <div id="features">
+      <section id="Three Gateway" class="active">
+        <h3>Three Gateway</h3>
+        <p>
+          Address : 410 N 44th St Phoenix, AZ, 85008-7605<br />
+          Rentable Building Area: 222,118 SF<br />
+          Available SF: 54,511<br />
+          Rental Rate: $29.50 - $30.00 /SF/Year<br />
+          Submarket: Office<br />
+          Number of Spaces Available: 12<br />
+          Building Class: A <br />
+        </p>
+        <img src="https://www.connect.media/wp-content/uploads/2019/10/sw_PhoenixGatewayCenter_phoenix.jpg"/>
+      </section>
+      <section id="One Gateway">
+        <h3>One Gateway</h3>
+        <p>
+          Address :426 N 44th St Phoenix, AZ, 85008-7605<br />
+          Rentable Building Area: 107,755 SF<br />
+          Available SF:  30,608<br />
+          Rental Rate: 	$29.00 - $30.00 /SF/Year<br />
+          Submarket: Office<br />
+          Number of Spaces Available: 6 <br />
+          Building Class: A <br />
+        </p>
+        <img src="http://www.azofficespace.com/images/Phoenix/3921192_tn.jpg"/>
+      </section>
+
+      <section id="24th At Camelback">
+        <h3>24th At Camelback</h3>
+        <p>
+          Address :2375 E Camelback Rd Phoenix, AZ, 85016-3424<br />
+          Rentable building area: 302,209 SF<br />
+          Rental Rate: 	$28.00 /SF/Year<br />
+          Available SF: 8,627<br />
+          Submarket: Office<br />
+          Number of Spaces Available: 1<br />
+          Building Class: A<br />
+        </p>
+        <img src="http://reap.cassidyturley.com//filecabinet/cass438970/Property/019182/24th%20at%20Camelback%20main%20pic.JPG"/>
+      </section>
+      <section id="Deer Valley Park">
+        <h3>Deer Valley Park</h3>
+        <p>
+          Address :1855 W Deer Valley Dr #201, Phoenix, AZ 85027<br />
+          Rentable Building Area: 15,702 SF<br />
+          Rental Rate: $19.00/SF/Year<br />
+          Available SF: 5,772<br />
+          Submarket: Retail<br />
+          Number of Spaces Available: 2<br />
+          Building Class: A<br />
+        </p>
+        <img src="http://reap.cassidyturley.com//filecabinet/Property/1207819/PrimaryPhoto%20(5).jpg"/>
+      </section>
+      <section id="Cofco Center">
+        <h3>Cofco Center</h3>
+        <p>
+          Address: 668 N 44th St, Ste 008, Phoenix, AZ 85008-865
+          <br />
+          Rentable Building Area: 166,000 SF<br />
+          Rental Rate: 	$14.50 /SF/Year<br />
+          Available SF: 18,108<br />
+          Submarket: Office<br />
+          Number of Spaces Available: 8<br />
+          Building Class: B<br />
+        </p>
+        <img src="http://reap.cassidyturley.com//filecabinet/cass438970/Property/019096/668%20N%2044th%20St.jpg"/>
+      </section>
+      <section id="Concord Place">
+        <h3>Concord Place</h3>
+        <p>
+          Address: 2999 N 44th St Phoenix, AZ, 85018-7246<br />Rentable building
+          area: 133,522<br />
+          Rental Rate: $26.00 /SF/Year<br />
+          Available SF: 11,080<br />
+          Submarket: Office<br />
+          Number of Spaces Available: 3<br />
+          Building Class: A<br />
+        </p>
+        <img src="https://static.wixstatic.com/media/448111_f0627a7baa874047b58875bcac637611~mv2_d_4000_2250_s_2.jpg"/>
+      </section>
+      <section id="Anchor Centre West">
+        <h3>Anchor Centre West</h3>
+        <p>
+          Address: 2201 E Camelback Rd, Ste 210B, Phoenix, AZ 85016-634<br />
+          Rentable Building Area: 198,493<br />
+          Rental Rate: $29.75 /SF/Year<br />
+          Available SF: 2,417<br />Submarket: Office<br />Number of Spaces Available: 1<br />Building Class: A <br />
+        </p>
+        <img src="http://reap.cassidyturley.com//filecabinet/cass438970/Property/019205/west.jpg"/>
+      </section>
+      <section id="Valley Commerce Center - South Bldg">
+        <h3>Valley Commerce Center - South Bldg</h3>
+        <p>
+          Address: 4745 N 7th St Phoenix, AZ, 85014-3665<br />
+          Rentable Building Area: 106,984<br />
+          Available SF: <br />Submarket: <br />Number of Spaces Available: <br />Delivery
+          date: <br />
+        </p>
+        <img
+          src="http://reap.cassidyturley.com/filecabinet/Property/480977/0123e4157e1e4ebfa7e7c549120500be.jpg"
+        />
+      </section>
+    </div>
+    <script>
+      mapboxgl.accessToken =
+        "pk.eyJ1IjoiYnJpdHRhbnl5ZWUiLCJhIjoiY2p1ZTdpN3M4MDBlMzQ0bHJhaDh1b203ZyJ9.Kv9ykdRmPx5utrcMAY9uCg";
+      var map = new mapboxgl.Map({
+        container: "map",
+        style: "mapbox://styles/brittanyyee/ck542raiz4xcm1dlk4oytsomk",
+        center: [-112.073354, 33.449569],
+        zoom: 15.5,
+        bearing: 27,
+        pitch: 60
+      });
+
+      var chapters = {
+        "Three Gateway": {
+          bearing: 27,
+          center: [-111.987871, 33.45318],
+          zoom: 17,
+          pitch: 60
+        },
+        "One Gateway": {
+          duration: 6000,
+          center: [-111.9897396, 33.4528942],
+          bearing: 150,
+          zoom: 17,
+          pitch: 60
+        },
+        "24th At Camelback": {
+          bearing: 90,
+          center: [-112.0318603, 33.5081405],
+          zoom: 17,
+          speed: 0.6,
+          pitch: 60
+        },
+        "Deer Valley Park": {
+          bearing: 90,
+          center: [-112.09900, 33.683178],
+          zoom: 17,
+          pitch: 60,
+          speed: 0.5
+        },
+        "Cofco Center": {
+          bearing: 45,
+          center: [-111.987666, 33.455599],
+          zoom: 17,
+          pitch: 60,
+          speed: 0.5
+        },
+        "Concord Place": {
+          bearing: 180,
+          center: [-111.9863814, 33.482415],
+          zoom: 17,
+          pitch: 60,
+          speed: 0.5
+        },
+        "Anchor Centre West": {
+          bearing: 90,
+          center: [-112.033874, 33.508637],
+          zoom: 17.3,
+          pitch: 40
+        },
+        "Valley Commerce Center - South Bldg": {
+          bearing: 90,
+          center: [-112.0639052, 33.5067578],
+          zoom: 14.3,
+          pitch: 20
+        }
+      };
+      window.onscroll = function() {
+        var chapterNames = Object.keys(chapters);
+        for (var i = 0; i < chapterNames.length; i++) {
+          var chapterName = chapterNames[i];
+          if (isElementOnScreen(chapterName)) {
+            setActiveChapter(chapterName);
+            break;
+          }
+        }
+      };
+
+      var activeChapterName = "Three Gateway";
+
+      function setActiveChapter(chapterName) {
+        if (chapterName === activeChapterName) return;
+
+        map.flyTo(chapters[chapterName]);
+
+        document.getElementById(chapterName).setAttribute("class", "active");
+        document.getElementById(activeChapterName).setAttribute("class", "");
+
+        activeChapterName = chapterName;
+      }
+
+      function isElementOnScreen(id) {
+        var element = document.getElementById(id);
+        var bounds = element.getBoundingClientRect();
+        return bounds.top < window.innerHeight && bounds.bottom > 0;
+      }
+      map.on("load", function() {
+        map.addSource("buildings", {
+          type: "vector",
+          url: "mapbox://mapbox.3d-buildings"
+        });
+        map.addLayer(
+          {
+            id: "3d-buildings",
+            source: "buildings",
+            "source-layer": "building",
+            type: "fill-extrusion",
+            minzoom: 10,
+            paint: {
+              "fill-extrusion-color": [
+                "case",
+                ["==", ["feature-state", "highlight"], true],
+                "#d10a0a",
+                "#ccc"
+              ],
+              "fill-extrusion-height": ["get", "height"],
+              "fill-extrusion-base": ["get", "min_height"],
+              "fill-extrusion-opacity": 0.7
+            }
+          },
+          "waterway-label"
+        );
+        var url = "";
+        var coordinates = [];
+        // Loop through the source GeoJSON
+        customerData.features.forEach(function(feature) {
+          coordinates = feature.geometry.coordinates;
+          // Query for which building footprints intersect them
+          url =
+            "https://api.mapbox.com/v4/mapbox.3d-buildings/tilequery/" +
+            coordinates +
+            ".json?limit=50&radius=30&access_token=" +
+            mapboxgl.accessToken;
+          fetch(url)
+            .then(data => {
+              return data.json();
+            })
+            .then(res => {
+              res.features.forEach(function(buildingFeature) {
+                map.setFeatureState(
+                  {
+                    source: "buildings",
+                    sourceLayer: "building",
+                    id: buildingFeature.id
+                  },
+                  {
+                    highlight: true
+                  }
+                );
+              });
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+        });
+      });
+      var customerData = {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [-111.9897396, 33.4528942]
+            },
+            properties: {
+              address: "410 N 44th St Phoenix, AZ, 85008-7605",
+              building_name: "Three Gateway",
+              rba: "222,118"
+            }
+          },
+          {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [-111.987871, 33.45318]
+            },
+            properties: {
+              address: "426 N 44th St Phoenix, AZ, 85008-6508",
+              building_name: "One Gateway",
+              rba: "107,755"
+            }
+          },
+          {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [-112.0318603, 33.5081405]
+            },
+            properties: {
+              address: "2375 E Camelback Rd Phoenix, AZ, 85016-3424",
+              building_name: "24th At Camelback",
+              rba: "109,682"
+            }
+          },
+          {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [-112.09900, 33.683178]
+            },
+            properties: {
+              address: "1855 W Deer Valley Dr #201, Phoenix, AZ 85027",
+              building_name: "Deer Valley Park",
+              rba: "138,240"
+            }
+          },
+          {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [-111.987666, 33.455599]
+            },
+            properties: {
+              address: "668 N 44th St, Ste 008, Phoenix, AZ 85008-865",
+              building_name: "Cofco Center",
+              rba: "103,219"
+            }
+          },
+          {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [-111.9863814, 33.482415]
+            },
+            properties: {
+              address: "2999 N 44th St Phoenix, AZ, 85018-7246",
+              building_name: "Concord Place",
+              rba: "133,522"
+            }
+          },
+          {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [-112.033874, 33.508637]
+            },
+            properties: {
+              address: "3033 N 44th St Phoenix, AZ, 85018-7226",
+              building_name: "Anchor Centre West",
+              rba: "117,611"
+            }
+          },
+          {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [-112.0639052, 33.5067578]
+            },
+            properties: {
+              address: "4745 N 7th St Phoenix, AZ, 85014-3665",
+              building_name: "Valley Commerce Center - South Bldg",
+              rba: "106,984"
+            }
+          }
+        ]
+      };
+    </script>
+  </body>
+</html>
