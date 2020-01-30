@@ -1,0 +1,27 @@
+//Change csv rows and columns so that there aren't separate columns for title and value --> add dataset to dataset editor in studio --> export to tileset and add as a map layer to basemap style
+  //Code pulls the data layer and binds the fields in the uploaded dataset to popup. Information shown in popup determined by fields added in
+    line
+    
+    map.on('click', function(e) {
+  var features = map.queryRenderedFeatures(e.point, {
+    layers: ['ArizonaCW'] // replace this with the name of the layer//
+  });
+
+  if (!features.length) {
+    return;
+  }
+
+  var feature = features[0];
+//indicate which feature properties from the dataset to include in the popup//
+  var popup = new mapboxgl.Popup({ offset: [0, -15] })
+    .setLngLat(feature.geometry.coordinates)
+    .setHTML('<h3>' + feature.properties.building_name + '</h3><p>' + feature.properties.building_address + '<br>' + feature.properties.Zip +
+    '<br>' + feature.properties.RBA + '</p>')
+    .addTo(map);
+    
+});
+
+map.legendControl.addLegend(document.getElementById('legend').innerHTML);
+    </script>
+  </body>
+</html>
